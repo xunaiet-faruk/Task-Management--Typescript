@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import {
     FiHeart,
@@ -7,7 +6,7 @@ import {
     FiLinkedin,
     FiMail,
     FiArrowUp,
-    FiCheckCircle
+   
 } from 'react-icons/fi';
 
 const Footer = () => {

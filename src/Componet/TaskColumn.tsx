@@ -21,26 +21,29 @@ const TaskColumn = ({
 }: TaskColumnProps) => {
     const { setNodeRef, isOver } = useDroppable({ id });
 
-    // কলাম এন্ট্রি অ্যানিমেশন
+    // ফিক্সড - টাইপ এরর ছাড়া
     const columnVariants = {
         hidden: { opacity: 0, x: -50 },
         visible: {
             opacity: 1,
             x: 0,
             transition: {
-                type: "spring",
+                type: "spring" as const,
                 stiffness: 100,
                 damping: 20
             }
         }
     };
 
-    // হেডার অ্যানিমেশন
+    // হেডার অ্যানিমেশন - ফিক্সড
     const headerVariants = {
-        initial: { scale: 1 },
+        rest: { scale: 1 },
         hover: {
             scale: 1.02,
-            transition: { type: "spring", stiffness: 300 }
+            transition: {
+                type: "spring" as const,
+                stiffness: 300
+            }
         }
     };
 
@@ -53,8 +56,9 @@ const TaskColumn = ({
         >
             <motion.div
                 className={`p-4 border-b ${color} bg-black/20 cursor-pointer`}
-                variants={headerVariants}
+                initial="rest"
                 whileHover="hover"
+                variants={headerVariants}
             >
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                     <motion.span
@@ -119,7 +123,7 @@ const TaskColumn = ({
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ type: "spring" }}
+                        transition={{ type: "spring" as const }}
                         className="text-center text-gray-500 py-12"
                     >
                         <motion.div
@@ -130,7 +134,7 @@ const TaskColumn = ({
                             transition={{
                                 duration: 2,
                                 repeat: Infinity,
-                                repeatType: "reverse"
+                                repeatType: "reverse" as const
                             }}
                             className="text-4xl mb-2"
                         >

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { DndContext, closestCorners } from '@dnd-kit/core';
-import type { DragEndEvent } from '@dnd-kit/core';
 import { FiList, FiCheckCircle, FiClock } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import Navbar from './Navbar';

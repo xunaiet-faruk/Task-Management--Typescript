@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { FiEdit2, FiTrash2,  FiCheck, FiClock, FiList } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiCheck, FiClock, FiList } from 'react-icons/fi';
 import { useState } from 'react';
 import type { Task, TaskStatus } from '../Types/task';
 
@@ -25,10 +25,6 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }: TaskCardProps) => 
         isDragging
     } = useSortable({
         id: task.id,
-        transition: {
-            duration: 150,
-            easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)'
-        }
     });
 
     const style = {
@@ -58,62 +54,20 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }: TaskCardProps) => 
         }
     };
 
-    // কার্ড এন্ট্রি অ্যানিমেশন
+    // ফিক্সড - variants সরিয়ে সরাসরি animate ব্যবহার করছি
     const cardVariants = {
         hidden: { opacity: 0, y: 50, scale: 0.9 },
         visible: {
             opacity: 1,
             y: 0,
             scale: 1,
-            transition: {
-                type: "spring",
-                stiffness: 300,
-                damping: 20,
-                duration: 0.3
-            }
         },
         hover: {
             scale: 1.03,
             y: -5,
-            transition: {
-                type: "spring",
-                stiffness: 400,
-                damping: 15
-            }
         },
         tap: {
             scale: 0.98,
-            transition: {
-                type: "spring",
-                stiffness: 500,
-                damping: 10
-            }
-        }
-    };
-
-    // আইকন অ্যানিমেশন ভেরিয়েন্ট
-    const iconVariants = {
-        initial: { scale: 1, rotate: 0 },
-        hover: {
-            scale: 1.2,
-            rotate: [0, -10, 10, -5, 5, 0],
-            transition: {
-                duration: 0.4,
-                ease: "easeInOut"
-            }
-        },
-        tap: { scale: 0.8, transition: { duration: 0.1 } }
-    };
-
-    const dragHandleVariants = {
-        initial: { x: 0 },
-        hover: {
-            x: [0, 5, -5, 3, -3, 0],
-            transition: {
-                duration: 0.5,
-                repeat: Infinity,
-                repeatType: "reverse" as const
-            }
         }
     };
 
@@ -127,17 +81,15 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }: TaskCardProps) => 
             animate="visible"
             whileHover="hover"
             whileTap="tap"
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
             className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-md rounded-xl border border-white/10 hover:border-blue-500/50 transition-all duration-300 overflow-hidden shadow-lg hover:shadow-blue-500/20"
         >
             {/* ড্র্যাগ হ্যান্ডেল */}
-            <motion.div
+            <div
                 {...listeners}
                 className="cursor-grab active:cursor-grabbing px-4 pt-3 pb-1 select-none bg-white/5"
-                variants={dragHandleVariants}
-                initial="initial"
-                whileHover="hover"
             >
                 <div className="flex items-center justify-center gap-2 text-gray-500 text-xs">
                     <motion.span
@@ -161,7 +113,7 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }: TaskCardProps) => 
                         ⋮⋮
                     </motion.span>
                 </div>
-            </motion.div>
+            </div>
 
             <div className="p-4 pt-2">
                 <div className="flex justify-between items-start mb-2">
@@ -177,12 +129,10 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }: TaskCardProps) => 
                     </motion.h4>
 
                     <div className="flex gap-2">
-                        {/* এডিট বাটন */}
+                        {/* এডিট বাটন - variants সরিয়ে দিয়েছি */}
                         <motion.button
-                            variants={iconVariants}
-                            initial="initial"
-                            whileHover="hover"
-                            whileTap="tap"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -193,12 +143,10 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }: TaskCardProps) => 
                             <FiEdit2 size={16} />
                         </motion.button>
 
-                        {/* ডিলিট বাটন */}
+                        {/* ডিলিট বাটন - variants সরিয়ে দিয়েছি */}
                         <motion.button
-                            variants={iconVariants}
-                            initial="initial"
-                            whileHover="hover"
-                            whileTap="tap"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -211,11 +159,10 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }: TaskCardProps) => 
                     </div>
                 </div>
 
-                {/* ডেসক্রিপশন - ক্লিক করলে এক্সপান্ড হবে */}
+                {/* ডেসক্রিপশন */}
                 <motion.p
                     className="text-gray-400 text-sm mb-3 cursor-pointer"
                     animate={{
-                        height: isExpanded ? 'auto' : '3rem',
                         opacity: isHovered ? 0.9 : 0.7
                     }}
                     onClick={() => setIsExpanded(!isExpanded)}
@@ -248,7 +195,7 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }: TaskCardProps) => 
                     </motion.span>
 
                     {/* স্ট্যাটাস ড্রপডাউন */}
-                    <motion.select
+                    <select
                         value={task.status}
                         onChange={(e) => {
                             e.preventDefault();
@@ -256,20 +203,12 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }: TaskCardProps) => 
                             onStatusChange(task.id, e.target.value as TaskStatus);
                         }}
                         onClick={(e) => e.stopPropagation()}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
                         className="text-sm bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white focus:outline-none focus:border-blue-500 cursor-pointer hover:bg-white/20 transition-all duration-200"
                     >
-                        <motion.option value="todo" whileHover={{ backgroundColor: '#1E40AF' }}>
-                            📋 Todo
-                        </motion.option>
-                        <motion.option value="in-progress" whileHover={{ backgroundColor: '#1E40AF' }}>
-                            ⚡ In Progress
-                        </motion.option>
-                        <motion.option value="done" whileHover={{ backgroundColor: '#1E40AF' }}>
-                            ✅ Done
-                        </motion.option>
-                    </motion.select>
+                        <option value="todo">📋 Todo</option>
+                        <option value="in-progress">⚡ In Progress</option>
+                        <option value="done">✅ Done</option>
+                    </select>
                 </div>
             </div>
 
